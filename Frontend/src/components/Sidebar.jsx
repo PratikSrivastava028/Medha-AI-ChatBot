@@ -5,7 +5,8 @@ export default function Sidebar(props){
     previousChats, getOrderedChats, activeChatId, openChat,
     createNewChat, menuOpenId, setMenuOpenId, deleteChat,
     togglePin, toggleArchive, setRenameId, setRenameValue, renameId, renameValue, confirmRename,
-    user, userMenuOpen, setUserMenuOpen, showSidebar, setShowSidebar, sidebarCollapsed, onLogout
+    user, userMenuOpen, setUserMenuOpen, showSidebar, setShowSidebar, sidebarCollapsed, onLogout,
+    theme, toggleTheme, onProfileClick
   } = props;
   // optional setter for collapsing sidebar on desktop (passed from Home)
   const { setSidebarCollapsed } = props;
@@ -29,8 +30,39 @@ export default function Sidebar(props){
               }}
             >☰</button>
             <div className="header-separator" aria-hidden></div>
-            <h2 className="sidebar-title">AI Chat</h2>
+            <h2 className="sidebar-title">Medha</h2>
+            <button
+              className="theme-toggle-btn"
+              onClick={toggleTheme}
+              title={theme === 'dark' ? "Switch to Light Mode" : "Switch to Dark Mode"}
+              aria-label="Toggle theme"
+            >
+              {theme === 'dark' ? (
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="sun-icon">
+                  <circle cx="12" cy="12" r="5"></circle>
+                  <line x1="12" y1="1" x2="12" y2="3"></line>
+                  <line x1="12" y1="21" x2="12" y2="23"></line>
+                  <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                  <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                  <line x1="1" y1="12" x2="3" y2="12"></line>
+                  <line x1="21" y1="12" x2="23" y2="12"></line>
+                  <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                  <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                </svg>
+              ) : (
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="moon-icon">
+                  <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                </svg>
+              )}
+            </button>
           </div>
+          <button className="sidebar-new-chat-btn" onClick={createNewChat} aria-label="New chat">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: '8px' }}>
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            New Chat
+          </button>
           <div className="sidebar-subtitle">Previous Chats</div>
         </div>
 
@@ -95,7 +127,7 @@ export default function Sidebar(props){
                 </div>
               </div>
               <div className="user-menu-actions">
-                <button onClick={()=>{ setUserMenuOpen(false); alert('Profile clicked'); }}>Profile</button>
+                <button onClick={()=>{ setUserMenuOpen(false); if(onProfileClick) onProfileClick(); }}>Profile</button>
                 <button onClick={()=>{ setUserMenuOpen(false); if(onLogout) onLogout(); }}>Logout</button>
               </div>
             </div>

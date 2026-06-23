@@ -4,6 +4,15 @@ const initSocketServer = require('./src/sockets/socket.server');
 const http = require("http");
 const server = http.createServer(app);   // express server se kaam nhi chlega so we require http server
 
+// Process-wide error handlers to prevent crashes on unhandled rejections or uncaught exceptions
+process.on("unhandledRejection", (reason, promise) => {
+    console.error("❌ Unhandled Rejection at:", promise, "reason:", reason);
+});
+
+process.on("uncaughtException", (error) => {
+    console.error("❌ Uncaught Exception:", error);
+});
+
 connectToDb();
 
 initSocketServer(server);
@@ -13,3 +22,4 @@ server.listen(PORT,()=>{
     console.log(`Running on port ${PORT}`);
     
 })
+

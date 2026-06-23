@@ -23,6 +23,19 @@ export default function Home() {
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
   const [connectionStatus, setConnectionStatus] = useState({ connected: false });
+  const [theme, setTheme] = useState(() => {
+    return localStorage.getItem('theme') || 'light';
+  });
+  const [profileModalOpen, setProfileModalOpen] = useState(false);
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(t => t === 'light' ? 'dark' : 'light');
+  };
   
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
@@ -371,24 +384,6 @@ export default function Home() {
 
   return (
     <div className="chat-page">
-      {/* Mobile floating new-chat button (top-right) */}
-      <button
-        className="mobile-new-chat-btn"
-        aria-label="New chat"
-        onClick={() => { createNewChat(); }}
-      >
-        +
-      </button>
-
-      {/* Desktop new chat button (top-right) */}
-      <button
-        className="desktop-new-chat-btn"
-        aria-label="New chat"
-        onClick={() => { createNewChat(); }}
-      >
-        +
-      </button>
-
       {/* global hamburger: shown when sidebar is hidden on mobile or when collapsed on desktop */}
       <button
         className="global-hamburger"
@@ -404,7 +399,10 @@ export default function Home() {
       >☰</button>
 
       <div className={`chat-container ${showSidebar ? 'show-sidebar' : ''} ${sidebarCollapsed ? 'sidebar-collapsed' : ''}`}>
-        <Sidebar
+        {showSidebar && isMobile && (
+          <div className="sidebar-overlay" onClick={() => setShowSidebar(false)} aria-hidden="true"></div>
+        )}
+         <Sidebar
           previousChats={previousChats}
           getOrderedChats={getOrderedChats}
           activeChatId={activeChatId}
@@ -428,6 +426,9 @@ export default function Home() {
           setShowSidebar={setShowSidebar}
           sidebarCollapsed={sidebarCollapsed}
           onLogout={handleLogout}
+          theme={theme}
+          toggleTheme={toggleTheme}
+          onProfileClick={() => setProfileModalOpen(true)}
         />
 
         <ChatMain
@@ -442,6 +443,41 @@ export default function Home() {
           connectionStatus={connectionStatus}
         />
       </div>
+
+      {profileModalOpen && (
+        <div className="profile-modal-overlay" onClick={() => setProfileModalOpen(false)}>
+          <div className="profile-modal-card" onClick={(e) => e.stopPropagation()}>
+            <button className="profile-modal-close" onClick={() => setProfileModalOpen(false)} aria-label="Close profile">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+            <div className="profile-modal-header">
+              <div className="profile-large-avatar">
+                {(user?.firstName && user?.lastName) ? (user.firstName[0] + user.lastName[0]).toUpperCase() : 'U'}
+              </div>
+              <h3 className="profile-name">
+                {(user?.firstName && user?.lastName) ? `${user.firstName} ${user.lastName}` : 'Medha User'}
+              </h3>
+              <p className="profile-email">{user?.email || 'No email associated'}</p>
+            </div>
+            <div className="profile-details-grid">
+              <div className="profile-detail-card">
+                <span className="profile-detail-label">Active Conversations</span>
+                <span className="profile-detail-value">{previousChats.length}</span>
+              </div>
+              <div className="profile-detail-card">
+                <span className="profile-detail-label">Pinned Chats</span>
+                <span className="profile-detail-value">{previousChats.filter(c => c.pinned).length}</span>
+              </div>
+            </div>
+            <div className="profile-modal-actions">
+              <button className="btn btn-primary" style={{ width: '100%', padding: '12px' }} onClick={() => setProfileModalOpen(false)}>Close</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

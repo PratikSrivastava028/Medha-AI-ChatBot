@@ -23,8 +23,8 @@ export default function ChatMain({
 
       {messages.length === 0 ? (
         <div className="hero">
-          <h2 className="hero-title">Good to see you,</h2>
-          <h2 className="hero-subtitle">Start a conversation — ask anything.</h2>
+          <h2 className="hero-title">Hello! I am Medha.</h2>
+          <h2 className="hero-subtitle">How can I help you today?</h2>
 
           <div className="hero-prompt">
             <button className="hero-add" aria-label="New conversation">+</button>
