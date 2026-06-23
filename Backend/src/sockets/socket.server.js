@@ -12,8 +12,8 @@ function initSocketServer(httpServer) {
   const io = new Server(httpServer, {
     cors: {
       origin: function(origin, callback) {
-        // Allow localhost, .onrender.com and .vercel.app domains
-        if (!origin || origin === "http://localhost:5173" || origin === "http://localhost:3000" || origin.endsWith('.onrender.com') || origin.endsWith('.vercel.app')) {
+        // Allow localhost domains only
+        if (!origin || origin === "http://localhost:5173" || origin === "http://localhost:3000" || origin === "http://localhost:4000") {
           callback(null, true);
         } else {
           callback(new Error('CORS not allowed'));
