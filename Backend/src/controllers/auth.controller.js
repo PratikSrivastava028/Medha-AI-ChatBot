@@ -92,7 +92,8 @@ async function loginController(req, res) {
                 email: user.email,
                 firstName: user.fullName.firstName,
                 lastName: user.fullName.lastName
-            }
+            },
+            token
         });
     } catch (error) {
         console.error("Login error details:", error);

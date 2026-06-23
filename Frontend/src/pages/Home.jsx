@@ -367,6 +367,9 @@ export default function Home() {
   function handleLogout() {
     dispatch(clearUser());
     socketService.disconnect();
+    localStorage.removeItem('token');
+    localStorage.removeItem('previousChats');
+    localStorage.removeItem('messagesByChat');
     window.location.href = '/login';
   }
 

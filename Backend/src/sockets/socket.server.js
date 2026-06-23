@@ -1,6 +1,7 @@
 const { Server } = require("socket.io");
 const messageModel = require("../models/message.model");
 const userModel = require("../models/user.model");
+const chatModel = require("../models/chat.model");
 const aiService = require("../service/ai.service");
 const { createMemory, queryMemory } = require("../service/vector.service");
 const cookie = require("cookie");
@@ -11,8 +12,8 @@ function initSocketServer(httpServer) {
   const io = new Server(httpServer, {
     cors: {
       origin: function(origin, callback) {
-        // Allow localhost and any .onrender.com domain
-        if (!origin || origin === "http://localhost:5173" || origin.endsWith('.onrender.com')) {
+        // Allow localhost, .onrender.com and .vercel.app domains
+        if (!origin || origin === "http://localhost:5173" || origin === "http://localhost:3000" || origin.endsWith('.onrender.com') || origin.endsWith('.vercel.app')) {
           callback(null, true);
         } else {
           callback(new Error('CORS not allowed'));
@@ -25,15 +26,16 @@ function initSocketServer(httpServer) {
    io.use(async (socket, next) => {
     //middleware for socket authentication
     const cookies = cookie.parse(socket.handshake.headers?.cookie || "");
+    const token = cookies.token || socket.handshake.auth?.token;
 
-    if (!cookies.token) {
+    if (!token) {
       console.warn("⚠️ Socket connection without token - allowing for demo purposes");
       socket.user = null;
       return next();
     }
 
     try {
-      const decoded = await jwt.verify(cookies.token, process.env.JWT_SECRET);
+      const decoded = await jwt.verify(token, process.env.JWT_SECRET);
       const user = await userModel.findById(decoded.id);
       if (user) {
         socket.user = user;
@@ -98,8 +100,9 @@ function initSocketServer(httpServer) {
                 content: response,
                 role: "model",
               }),
+              chatModel.findByIdAndUpdate(messagePayLoad.chat, { lastActivity: new Date() })
             ]);
-            console.log("✅ Messages saved successfully");
+            console.log("✅ Messages and chat activity saved successfully");
           } catch (dbError) {
             console.warn("⚠️ Database save failed (non-critical):", dbError.message);
           }

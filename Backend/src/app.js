@@ -34,13 +34,14 @@ app.use("/api/", limiter);
 const allowedOrigins = [
     'http://localhost:5173',
     'http://localhost:3000',
-    'https://chat-gpt-model-1.onrender.com'
+    'https://medha-ai-chat-bot-87ij.vercel.app',
+    'https://medha-ai-chat-bot-sp2m.vercel.app'
 ];
 
 app.use(cors({
     origin: function (origin, callback) {
         if (!origin) return callback(null, true);
-        if (allowedOrigins.indexOf(origin) !== -1 || origin.endsWith('.onrender.com')) {
+        if (allowedOrigins.indexOf(origin) !== -1 || origin.endsWith('.onrender.com') || origin.endsWith('.vercel.app')) {
             return callback(null, true);
         }
         return callback(new Error('CORS policy: origin not allowed'));

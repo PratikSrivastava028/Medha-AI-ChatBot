@@ -50,6 +50,9 @@ export default function Register() {
       if (res.data.user) {
         dispatch(setUser(res.data.user));
       }
+      if (res.data.token) {
+        localStorage.setItem("token", res.data.token);
+      }
       
       // On success navigate to home
       navigate("/");

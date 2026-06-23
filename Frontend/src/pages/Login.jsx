@@ -32,6 +32,9 @@ export default function Login() {
       if (res.data.user) {
         dispatch(setUser(res.data.user));
       }
+      if (res.data.token) {
+        localStorage.setItem("token", res.data.token);
+      }
       
       navigate("/");
     } catch (err) {

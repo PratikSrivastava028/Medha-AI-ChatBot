@@ -13,10 +13,15 @@ class SocketService {
       return this.socket;
     }
 
+    const socketToken = token || localStorage.getItem('token');
+
     // Initialize socket connection with authentication
     this.socket = io(API_BASE_URL, {
       withCredentials: true,
       transports: ['websocket', 'polling'],
+      auth: {
+        token: socketToken
+      },
       reconnection: true,
       reconnectionDelay: 1000,
       reconnectionDelayMax: 5000,
