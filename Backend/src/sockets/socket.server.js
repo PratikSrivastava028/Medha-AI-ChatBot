@@ -12,11 +12,22 @@ function initSocketServer(httpServer) {
   const io = new Server(httpServer, {
     cors: {
       origin: function(origin, callback) {
-        // Allow localhost domains only
-        if (!origin || origin === "http://localhost:5173" || origin === "http://localhost:3000" || origin === "http://localhost:4000") {
+        if (!origin) return callback(null, true);
+        
+        const isAllowed = 
+          origin === "http://localhost:5173" || 
+          origin === "http://localhost:3000" || 
+          origin === "http://localhost:4000" ||
+          origin.startsWith("http://localhost:") ||
+          origin.startsWith("http://127.0.0.1:") ||
+          origin === process.env.FRONTEND_URL ||
+          origin === "https://medha-ai-chat-bot-sp2m.vercel.app";
+
+        if (isAllowed) {
           callback(null, true);
         } else {
-          callback(new Error('CORS not allowed'));
+          // Fallback to allow any origin to ensure global access
+          callback(null, true);
         }
       },
       credentials: true

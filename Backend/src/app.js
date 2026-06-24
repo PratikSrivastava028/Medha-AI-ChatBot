@@ -34,16 +34,30 @@ app.use("/api/", limiter);
 const allowedOrigins = [
     'http://localhost:5173',
     'http://localhost:3000',
-    'http://localhost:4000'
+    'http://localhost:4000',
+    'https://medha-ai-chat-bot-sp2m.vercel.app'
 ];
+
+if (process.env.FRONTEND_URL) {
+    allowedOrigins.push(process.env.FRONTEND_URL);
+}
 
 app.use(cors({
     origin: function (origin, callback) {
+        // Allow all origins to ensure global access (e.g. from deployed frontend or multiple environments)
+        // while supporting credentials: true (which requires returning the exact origin instead of '*')
         if (!origin) return callback(null, true);
-        if (allowedOrigins.indexOf(origin) !== -1) {
+        
+        const isAllowed = allowedOrigins.indexOf(origin) !== -1 || 
+                          origin.startsWith('http://localhost:') || 
+                          origin.startsWith('http://127.0.0.1:');
+                          
+        if (isAllowed) {
             return callback(null, true);
         }
-        return callback(new Error('CORS policy: origin not allowed'));
+        
+        // Fallback: allow the origin to ensure global access
+        return callback(null, true);
     },
     credentials: true
 }));
