@@ -21,7 +21,7 @@ function initSocketServer(httpServer) {
           origin.startsWith("http://localhost:") ||
           origin.startsWith("http://127.0.0.1:") ||
           origin === process.env.FRONTEND_URL ||
-          origin === "https://medha-ai-chat-bot-sp2m.vercel.app";
+          origin === "https://medha-ai-chatbot-1.onrender.com";
 
         if (isAllowed) {
           callback(null, true);
