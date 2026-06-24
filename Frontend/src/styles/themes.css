@@ -34,7 +34,7 @@
   --radius-full: 9999px;
   
   /* Typography */
-  --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', sans-serif;
+  --font-family: 'Outfit', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
 [data-theme="dark"] {
@@ -638,12 +638,15 @@
 }
 
 .hero-subtitle {
+  font-family: 'Outfit', sans-serif;
   font-size: 20px;
   color: var(--text-secondary);
   margin: 0 0 36px 0;
-  font-weight: 300;
+  font-weight: 400;
   max-width: 500px;
   line-height: 1.5;
+  letter-spacing: 0.5px;
+  opacity: 0.9;
 }
 
 .hero-prompt {
