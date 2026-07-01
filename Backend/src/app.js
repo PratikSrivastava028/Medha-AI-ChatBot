@@ -13,7 +13,7 @@ const app = express();
 // Security Headers
 app.use(helmet({
     crossOriginResourcePolicy: { policy: "cross-origin" },
-    crossOriginOpenerPolicy: { policy: "cross-origin" }
+    crossOriginOpenerPolicy: false
 }));
 
 // Logging
