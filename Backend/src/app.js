@@ -11,7 +11,10 @@ const rateLimit = require("express-rate-limit");
 const app = express();
 
 // Security Headers
-app.use(helmet());
+app.use(helmet({
+    crossOriginResourcePolicy: { policy: "cross-origin" },
+    crossOriginOpenerPolicy: { policy: "cross-origin" }
+}));
 
 // Logging
 app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'));
